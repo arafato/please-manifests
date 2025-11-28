@@ -14,6 +14,7 @@ jobs:
     env:
       R2_BUCKET_NAME: please
       R2_ACCOUNT_ID: 4e68229b812c6d77985c859ef417aeb6
+      GIT_REF: main
       EXTRACTED_FOLDER: ${{ github.event.repository.name }}-main
       FINAL_JSON_NAME: manifest-core.json
       FINAL_TARBALL_NAME: manifest-core.tar.gz # The compressed file to be uploaded
