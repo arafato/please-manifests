@@ -1,0 +1,17 @@
+{
+  "name": "terraform",
+  "description": "Infrastructure as Code tool for building, changing, and versioning infrastructure",
+  "homepage": "https://www.terraform.io/",
+  "license": "BSD-3",
+  "categories": ["programming", "language"],
+  "image": "docker.io/library/golang",
+  "versions": ["1.25.4", "1.24.10"],
+  "default_version": "1.25.4",
+  "script": "standard",
+  "container_args": {
+    "dns": ["8.8.8.8"],
+    "workdir": "/mnt",
+    "volumes": ["$(pwd):/mnt"],
+    "additional_flags": ["--rm"]
+  }
+}
