@@ -3,13 +3,14 @@ name: Deploy Tarball to Cloudflare R2 (with JSON Stitching)
 on:
   push:
     branches:
-      - main  # Set to the branch you want to deploy
+      - main # Set to the branch you want to deploy
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: please
-    
+
     # Define variables for easy configuration
     env:
       R2_BUCKET_NAME: please
@@ -26,7 +27,7 @@ jobs:
           TARBALL_URL="https://github.com/${{ github.repository }}/archive/refs/heads/${{ env.GIT_REF }}.tar.gz"
 
           echo "Downloading and extracting tarball from: $TARBALL_URL"
-          
+
           # 2. Download the tarball and pipe it directly to tar for extraction.
           curl -sL "$TARBALL_URL" | tar -xz
 
@@ -40,7 +41,7 @@ jobs:
             jq -s '.' > ${{ env.FINAL_JSON_NAME }}
 
           echo "Stitching complete. File: ${{ env.FINAL_JSON_NAME }}"
-          
+
           # 2. Create the gzipped tarball of the stitched JSON file
           tar -czf ${{ env.FINAL_TARBALL_NAME }} ${{ env.FINAL_JSON_NAME }}
 
@@ -62,7 +63,7 @@ jobs:
             --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com \
             --exclude "*" \
             --include "*.sh"
-            
+
           echo "Shell script sync complete."
 
           # 2. Cleanup the large temporary folder and uncompressed JSON now that they have been used.
