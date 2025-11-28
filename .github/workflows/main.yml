@@ -46,14 +46,10 @@ jobs:
 
           echo "✅ Tarball artifact created: ${{ env.FINAL_TARBALL_NAME }}"
 
-      - name: 🔑 Configure R2 Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 # Arbitrary region, but required by the action
-
       - name: 🚀 Sync Shell Scripts (Only Changed) & Cleanup Extracted Folder
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         run: |
           echo "Syncing all .sh files to R2 using differential sync..."
 
@@ -75,6 +71,9 @@ jobs:
           echo "Cleaned up temporary extracted files."
 
       - name: 📦 Upload Compressed JSON Data Artifact
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         # Use 'aws s3 cp' to upload the single generated tarball.
         run: |
           aws s3 cp ${{ env.FINAL_TARBALL_NAME }} \
