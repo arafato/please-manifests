@@ -1,0 +1,17 @@
+{
+  "name": "curl",
+  "description": "Command line tool for transferring data with URLs",
+  "homepage": "https://curl.se/",
+  "license": "MIT",
+  "categories": ["network", "utility"],
+  "image": "docker.io/alpine/curl",
+  "versions": ["8.14.1", "8.12.1", "8.11.1", "8.7.1"],
+  "default_version": "8.14.1",
+  "script": "standard",
+  "container_args": {
+    "dns": ["8.8.8.8"],
+    "workdir": "/mnt",
+    "volumes": ["$(pwd):/mnt"],
+    "additional_flags": ["--rm"]
+  }
+}
