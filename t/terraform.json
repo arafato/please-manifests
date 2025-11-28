@@ -1,0 +1,17 @@
+{
+  "name": "terraform",
+  "description": "Infrastructure as Code tool for building, changing, and versioning infrastructure",
+  "homepage": "https://www.terraform.io/",
+  "license": "BUSL-1.1",
+  "categories": ["infrastructure", "iac", "cloud"],
+  "image": "docker.io/hashicorp/terraform",
+  "versions": ["1.14", "1.13.5", "1.12.2"],
+  "default_version": "1.14",
+  "script": "standard",
+  "container_args": {
+    "dns": ["8.8.8.8"],
+    "workdir": "/mnt",
+    "volumes": ["$(pwd):/mnt"],
+    "additional_flags": ["--rm"]
+  }
+}
