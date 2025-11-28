@@ -59,7 +59,7 @@ jobs:
           # '--include "*.sh"' overrides the exclude for files ending in .sh.
           # This performs a DIFFERENTIAL COPY, only uploading what has changed.
           aws s3 sync ./${{ env.EXTRACTED_FOLDER }} \
-            s3://${{ vars.R2_BUCKET_NAME }}/ \
+            s3://${{ env.R2_BUCKET_NAME }}/ \
             --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com \
             --exclude "*" \
             --include "*.sh"
@@ -78,5 +78,5 @@ jobs:
         # Use 'aws s3 cp' to upload the single generated tarball.
         run: |
           aws s3 cp ${{ env.FINAL_TARBALL_NAME }} \
-            s3://${{ vars.R2_BUCKET_NAME }}/${{ env.FINAL_TARBALL_NAME }} \
+            s3://${{ env.R2_BUCKET_NAME }}/${{ env.FINAL_TARBALL_NAME }} \
             --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
