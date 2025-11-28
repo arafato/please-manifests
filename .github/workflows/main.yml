@@ -1,0 +1,82 @@
+name: Deploy Tarball to Cloudflare R2 (with JSON Stitching)
+
+on:
+  push:
+    branches:
+      - main  # Set to the branch you want to deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: please
+    
+    # Define variables for easy configuration
+    env:
+      R2_BUCKET_NAME: please
+      R2_ACCOUNT_ID: 4e68229b812c6d77985c859ef417aeb6
+      GIT_REF: main
+      EXTRACTED_FOLDER: ${{ github.event.repository.name }}-${{ env.GIT_REF }}
+      FINAL_JSON_NAME: manifest-core.json
+      FINAL_TARBALL_NAME: manifest-core.tar.gz # The compressed file to be uploaded
+
+    steps:
+      - name: ⬇️ Download & Extract Repository Tarball
+        run: |
+          # 1. Construct the direct tarball URL
+          TARBALL_URL="https://github.com/${{ github.repository }}/archive/refs/heads/${{ env.GIT_REF }}.tar.gz"
+
+          echo "Downloading and extracting tarball from: $TARBALL_URL"
+          
+          # 2. Download the tarball and pipe it directly to tar for extraction.
+          curl -sL "$TARBALL_URL" | tar -xz
+
+      - name: 🧩 Create Compressed JSON Artifact
+        run: |
+          echo "Stitching all .json files from ./${{ env.EXTRACTED_FOLDER }} into array..."
+
+          # 1. Stitch files into a single JSON array
+          find ./${{ env.EXTRACTED_FOLDER }} -name "*.json" -print0 | \
+            xargs -0 cat | \
+            jq -s '.' > ${{ env.FINAL_JSON_NAME }}
+
+          echo "Stitching complete. File: ${{ env.FINAL_JSON_NAME }}"
+          
+          # 2. Create the gzipped tarball of the stitched JSON file
+          tar -czf ${{ env.FINAL_TARBALL_NAME }} ${{ env.FINAL_JSON_NAME }}
+
+          echo "✅ Tarball artifact created: ${{ env.FINAL_TARBALL_NAME }}"
+
+      - name: 🔑 Configure R2 Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 # Arbitrary region, but required by the action
+
+      - name: 🚀 Sync Shell Scripts (Only Changed) & Cleanup Extracted Folder
+        run: |
+          echo "Syncing all .sh files to R2 using differential sync..."
+
+          # 1. Use aws s3 sync with include/exclude filters.
+          # '--exclude "*"' tells sync to ignore everything first.
+          # '--include "*.sh"' overrides the exclude for files ending in .sh.
+          # This performs a DIFFERENTIAL COPY, only uploading what has changed.
+          aws s3 sync ./${{ env.EXTRACTED_FOLDER }} \
+            s3://${{ vars.R2_BUCKET_NAME }}/ \
+            --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com \
+            --exclude "*" \
+            --include "*.sh"
+            
+          echo "Shell script sync complete."
+
+          # 2. Cleanup the large temporary folder and uncompressed JSON now that they have been used.
+          rm -rf ./${{ env.EXTRACTED_FOLDER }}
+          rm -f ${{ env.FINAL_JSON_NAME }}
+          echo "Cleaned up temporary extracted files."
+
+      - name: 📦 Upload Compressed JSON Data Artifact
+        # Use 'aws s3 cp' to upload the single generated tarball.
+        run: |
+          aws s3 cp ${{ env.FINAL_TARBALL_NAME }} \
+            s3://${{ vars.R2_BUCKET_NAME }}/${{ env.FINAL_TARBALL_NAME }} \
+            --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
