@@ -38,7 +38,7 @@ jobs:
           # 1. Stitch files into a single JSON array
           find ./${{ env.EXTRACTED_FOLDER }} -name "*.json" -print0 | \
             xargs -0 cat | \
-            jq -s '.' > ${{ env.FINAL_JSON_NAME }}
+            jq -s '{namespace: "core", manifests: .}' > ${{ env.FINAL_JSON_NAME }}
 
           echo "Stitching complete. File: ${{ env.FINAL_JSON_NAME }}"
 
