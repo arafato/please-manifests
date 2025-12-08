@@ -1,0 +1,17 @@
+{
+  "name": "bat",
+  "description": "A cat(1) clone with syntax highlighting and Git integration.",
+  "homepage": "https://github.com/sharkdp/bat",
+  "license": "Apache-2.0",
+  "categories": ["syntax-highlighting", "terminal"],
+  "image": "docker.io/efrecon/bat",
+  "versions": ["0.26.1", "0.26.0", "0.25.0", "0.24.0"],
+  "default_version": "0.26.1",
+  "script": "standard",
+  "container_args": {
+    "dns": ["8.8.8.8"],
+    "workdir": "/mnt",
+    "volumes": ["$(pwd):/mnt"],
+    "additional_flags": ["--rm"]
+  }
+}
