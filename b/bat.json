@@ -8,6 +8,7 @@
   "versions": ["v0.26.1", "v0.26.0", "v0.25.0", "v0.24.0"],
   "default_version": "v0.26.1",
   "script": "standard",
+  "platform": "linux/amd64",
   "container_args": {
     "dns": ["8.8.8.8"],
     "workdir": "/mnt",
