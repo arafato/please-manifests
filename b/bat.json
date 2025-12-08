@@ -12,6 +12,6 @@
     "dns": ["8.8.8.8"],
     "workdir": "/mnt",
     "volumes": ["$(pwd):/mnt"],
-    "additional_flags": ["--rm"]
+    "additional_flags": ["--platform linux/amd64"]
   }
 }
