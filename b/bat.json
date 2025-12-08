@@ -5,8 +5,8 @@
   "license": "Apache-2.0",
   "categories": ["syntax-highlighting", "terminal"],
   "image": "docker.io/efrecon/bat",
-  "versions": ["0.26.1", "0.26.0", "0.25.0", "0.24.0"],
-  "default_version": "0.26.1",
+  "versions": ["v0.26.1", "v0.26.0", "v0.25.0", "v0.24.0"],
+  "default_version": "v0.26.1",
   "script": "standard",
   "container_args": {
     "dns": ["8.8.8.8"],
