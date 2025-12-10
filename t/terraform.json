@@ -8,10 +8,11 @@
   "versions": ["1.14", "1.13.5", "1.12.2"],
   "default_version": "1.14",
   "script": "standard",
+  "platforms": ["linux/amd64", "linux/arm64"],
   "container_args": {
     "dns": ["8.8.8.8"],
     "workdir": "/mnt",
     "volumes": ["$(pwd):/mnt"],
-    "additional_flags": ["--rm"]
+    "additional_flags": []
   }
 }
