@@ -5,8 +5,12 @@
   "license": "BUSL-1.1",
   "categories": ["infrastructure", "iac", "cloud"],
   "image": "docker.io/hashicorp/terraform",
-  "versions": ["1.14", "1.13.5", "1.12.2"],
-  "default_version": "1.14",
+  "version_discovery": {
+    "filter": {
+      "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "exclude": ["latest", "edge", "rc", "beta", "alpha", "dev"]
+    }
+  },
   "script": "standard",
   "platforms": ["linux/amd64", "linux/arm64"],
   "container_args": {

@@ -5,8 +5,12 @@
   "license": "Apache-2.0",
   "categories": ["syntax-highlighting", "terminal"],
   "image": "docker.io/efrecon/bat",
-  "versions": ["v0.26.1", "v0.26.0", "v0.25.0", "v0.24.0"],
-  "default_version": "v0.26.1",
+  "version_discovery": {
+    "filter": {
+      "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "exclude": ["latest", "edge", "rc", "beta", "alpha", "dev"]
+    }
+  },
   "script": "standard",
   "platforms": ["linux/amd64"],
   "application_args": ["--color=always"],
