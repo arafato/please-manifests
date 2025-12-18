@@ -43,7 +43,9 @@ jobs:
           echo "Stitching complete. File: ${{ env.FINAL_JSON_NAME }}"
 
           # 2. Create the gzipped tarball of the stitched JSON file and hooks folder
-          tar -czf ${{ env.FINAL_TARBALL_NAME }} ${{ env.FINAL_JSON_NAME }}
+          tar -czf ${{ env.FINAL_TARBALL_NAME }} \
+            -C . ${{ env.FINAL_JSON_NAME }} \
+            -C ${{ env.EXTRACTED_FOLDER }} hooks
 
           echo "✅ Tarball artifact created: ${{ env.FINAL_TARBALL_NAME }}"
 
