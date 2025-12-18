@@ -12,12 +12,27 @@
       "exclude": ["latest", "edge", "rc", "beta", "alpha", "dev"]
     }
   },
-  "script": "standard",
   "platforms": ["linux/amd64", "linux/arm64"],
+  "host_env_vars": {
+    "GOMODCACHE": "${HOME}/.cache/go-mod",
+    "GOCACHE": "${HOME}/.cache/go-build"
+  },
+  "script": "standard",
   "container_args": {
     "dns": ["8.8.8.8"],
     "workdir": "/mnt",
-    "volumes": ["$(pwd):/mnt"],
+    "volumes": [
+      "$(pwd):/mnt",
+      "${GOMODCACHE}:/go/pkg/mod",
+      "${GOCACHE}:/root/.cache/go-build"
+    ],
+    "container_env_vars": {
+      "GOOS": "${RUNTIME_OS}",
+      "GOARCH": "${RUNTIME_ARCH}",
+      "GOINSECURE": "*",
+      "GIT_SSL_NO_VERIFY": "true",
+      "GOPROXY": "direct"
+    },
     "additional_flags": []
   }
 }
