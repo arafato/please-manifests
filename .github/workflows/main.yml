@@ -29,7 +29,7 @@ jobs:
           echo "Downloading and extracting tarball from: $TARBALL_URL"
 
           # 2. Download the tarball and pipe it directly to tar for extraction.
-          curl -sL "$TARBALL_URL" | tar -xz --strip-components=1
+          curl -sL "$TARBALL_URL" | tar -xz
 
       - name: 🧩 Create Compressed JSON Artifact
         run: |
@@ -43,9 +43,7 @@ jobs:
           echo "Stitching complete. File: ${{ env.FINAL_JSON_NAME }}"
 
           # 2. Create the gzipped tarball of the stitched JSON file and hooks folder
-          tar -czf ${{ env.FINAL_TARBALL_NAME }} \
-                -C . ${{ env.FINAL_JSON_NAME }} \
-                -C ./${{ env.EXTRACTED_FOLDER }} hooks
+          tar -czf ${{ env.FINAL_TARBALL_NAME }} ${{ env.FINAL_JSON_NAME }} {{ env.EXTRACTED_FOLDER }}/hooks
 
           echo "✅ Tarball artifact created: ${{ env.FINAL_TARBALL_NAME }}"
 
@@ -60,7 +58,7 @@ jobs:
           # '--exclude "*"' tells sync to ignore everything first.
           # '--include "*.sh"' overrides the exclude for files ending in .sh.
           # This performs a DIFFERENTIAL COPY, only uploading what has changed.
-          aws s3 sync . \
+          aws s3 sync ./${{ env.EXTRACTED_FOLDER }} \
             s3://${{ env.R2_BUCKET_NAME }}/ \
             --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com \
             --exclude "*" \
@@ -69,6 +67,7 @@ jobs:
           echo "Shell script sync complete."
 
           # 2. Cleanup the large temporary folder and uncompressed JSON now that they have been used.
+          rm -rf ./${{ env.EXTRACTED_FOLDER }}
           rm -f ${{ env.FINAL_JSON_NAME }}
           echo "Cleaned up temporary extracted files."
 
