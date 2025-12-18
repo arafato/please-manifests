@@ -29,7 +29,7 @@ jobs:
           echo "Downloading and extracting tarball from: $TARBALL_URL"
 
           # 2. Download the tarball and pipe it directly to tar for extraction.
-          curl -sL "$TARBALL_URL" | tar -xz
+          curl -sL "$TARBALL_URL" | tar -xz --strip-components=1
 
       - name: 🧩 Create Compressed JSON Artifact
         run: |
@@ -43,7 +43,7 @@ jobs:
           echo "Stitching complete. File: ${{ env.FINAL_JSON_NAME }}"
 
           # 2. Create the gzipped tarball of the stitched JSON file and hooks folder
-          tar -czf ${{ env.FINAL_TARBALL_NAME }} ${{ env.FINAL_JSON_NAME }} -C ./${{ env.EXTRACTED_FOLDER }} hooks
+          tar -czf ${{ env.FINAL_TARBALL_NAME }} ${{ env.FINAL_JSON_NAME }} hooks
 
           echo "✅ Tarball artifact created: ${{ env.FINAL_TARBALL_NAME }}"
 
