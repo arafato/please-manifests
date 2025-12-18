@@ -58,7 +58,7 @@ jobs:
           # '--exclude "*"' tells sync to ignore everything first.
           # '--include "*.sh"' overrides the exclude for files ending in .sh.
           # This performs a DIFFERENTIAL COPY, only uploading what has changed.
-          aws s3 sync ./${{ env.EXTRACTED_FOLDER }} \
+          aws s3 sync . \
             s3://${{ env.R2_BUCKET_NAME }}/ \
             --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com \
             --exclude "*" \
@@ -67,7 +67,6 @@ jobs:
           echo "Shell script sync complete."
 
           # 2. Cleanup the large temporary folder and uncompressed JSON now that they have been used.
-          rm -rf ./${{ env.EXTRACTED_FOLDER }}
           rm -f ${{ env.FINAL_JSON_NAME }}
           echo "Cleaned up temporary extracted files."
 
