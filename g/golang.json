@@ -1,6 +1,6 @@
 {
   "name": "golang",
-  "executable": "go",
+  "exec": "go",
   "description": "Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.",
   "homepage": "https://www.terraform.io/",
   "license": "BSD-3",

@@ -1,6 +1,6 @@
 {
   "name": "curl",
-  "executable": "curl",
+  "exec": "curl",
   "description": "Command line tool for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "MIT",

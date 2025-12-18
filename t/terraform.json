@@ -1,6 +1,6 @@
 {
   "name": "terraform",
-  "executable": "terraform",
+  "exec": "terraform",
   "description": "Infrastructure as Code tool for building, changing, and versioning infrastructure",
   "homepage": "https://www.terraform.io/",
   "license": "BUSL-1.1",
